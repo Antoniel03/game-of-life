@@ -9,10 +9,10 @@ find_package(SDL3 REQUIRED)
 
 add_executable(${PROJECT_NAME} 
   src/main.cpp 
-  src/graphics/graphics.cpp
+  src/graphics/game_io.cpp
   src/models/cell.cpp
 )
 
-target_link_directories(${PROJECT_NAME} PUBLIC src/graphics src/models)
+target_link_directories(${PROJECT_NAME} PUBLIC src/game_io src/models)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 
