@@ -4,14 +4,17 @@
 
 #pragma once
 
-class Graphics {
+class Game_IO {
 private:
   SDL_Window *win;
   SDL_Renderer *ren;
   int refresh_rate = 60;
 
 public:
-  Graphics();
+  Game_IO();
+  // input
+
+  // output
   void init();
   void zoom_in();
   void zoom_out();
