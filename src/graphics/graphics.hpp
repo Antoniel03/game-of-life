@@ -1,5 +1,7 @@
+#include "../models/cell.hpp"
 #include <SDL3/SDL.h>
-#include <iostream>
+#include <vector>
+
 #pragma once
 
 class Graphics {
@@ -11,9 +13,11 @@ private:
 public:
   Graphics();
   void init();
-  void render_cell();
   void zoom_in();
   void zoom_out();
-  void loop(bool quit);
+  void loop(std::vector<Cell *> cells, bool quit);
   void change_refresh_rate(int refresh_rate);
+
+private:
+  void render_cells(std::vector<Cell *> cells);
 };
