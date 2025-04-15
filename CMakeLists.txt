@@ -9,7 +9,8 @@ find_package(SDL3 REQUIRED)
 
 add_executable(${PROJECT_NAME} 
   src/main.cpp 
-  src/graphics/game_io.cpp
+  src/game_io/input.cpp
+  src/game_io/output.cpp
   src/models/cell.cpp
 )
 

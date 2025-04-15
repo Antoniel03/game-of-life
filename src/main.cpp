@@ -1,4 +1,4 @@
-#include "graphics/graphics.hpp"
+#include "game_io/game_io.hpp"
 #include "models/cell.hpp"
 #include <iostream>
 
@@ -8,7 +8,8 @@ int main(int argc, char *argv[]) {
   Cell c = Cell{20, 20};
   c.update_status(DEAD);
   std::vector<Cell *> cells = {&a, &b, &c};
-  Graphics g = Graphics();
+  Game_IO g = Game_IO();
+  g.set_cells(cells);
   g.init();
-  g.loop(cells, false);
+  g.loop(false);
 }
