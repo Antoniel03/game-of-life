@@ -17,6 +17,7 @@ private:
   int refresh_rate = 60;
   GameIO_Status status = ENDED;
   std::vector<Cell *> cells;
+  SDL_FRect squareOutline;
 
 public:
   Game_IO();

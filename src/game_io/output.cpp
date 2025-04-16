@@ -1,13 +1,14 @@
 #include "game_io.hpp"
 // #include "../models/cell.hpp"
 #include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
 #include <iostream>
 
 Game_IO::Game_IO() {
-  win = SDL_CreateWindow("Game of life", 640, 480, 0);
+  win = SDL_CreateWindow("Game of life", 1280, 700, 0);
   ren = SDL_CreateRenderer(win, NULL);
 }
 void Game_IO::init() {
@@ -30,11 +31,14 @@ void Game_IO::init() {
 void Game_IO::loop(bool quit) {
   SDL_Event event;
   bool mouse_wheel_pressed = false;
+  squareOutline = SDL_FRect{3, 3, 1273, 693};
   while (status != ENDED) {
     handle_button_events(&event, &mouse_wheel_pressed);
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
     render_cells();
+    SDL_SetRenderDrawColor(ren, 100, 200, 150, 255);
+    SDL_RenderRect(ren, &squareOutline);
     SDL_RenderPresent(ren);
     SDL_Delay(refresh_rate);
   }

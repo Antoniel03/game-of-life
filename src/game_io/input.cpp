@@ -91,4 +91,6 @@ void Game_IO::handle_mousegrab(SDL_MouseMotionEvent coord) {
     rect->x += 10 * coord.xrel;
     rect->y += 10 * coord.yrel;
   }
+  squareOutline.x += 10 * coord.xrel;
+  squareOutline.y += 10 * coord.yrel;
 }
