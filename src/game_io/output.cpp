@@ -31,7 +31,7 @@ void Game_IO::init() {
 void Game_IO::loop(bool quit) {
   SDL_Event event;
   bool mouse_wheel_pressed = false;
-  squareOutline = SDL_FRect{3, 3, 1273, 693};
+  squareOutline = SDL_FRect{0, 0, 1270, 690};
   while (status != ENDED) {
     handle_button_events(&event, &mouse_wheel_pressed);
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);

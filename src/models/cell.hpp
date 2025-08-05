@@ -6,8 +6,6 @@ class Cell {
 private:
   cell_status status;
   SDL_FRect *cell_graphic;
-  int x;
-  int y;
 
 public:
   Cell();

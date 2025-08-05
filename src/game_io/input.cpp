@@ -1,5 +1,6 @@
 #include "cmath"
 #include "game_io.hpp"
+#include <SDL3/SDL_rect.h>
 #include <iostream>
 
 Cell *createCell(float x, float y, SDL_Renderer *renderer) {
@@ -18,6 +19,27 @@ Cell *createCell(float x, float y, SDL_Renderer *renderer) {
 
   Cell *cell = new Cell{x, y};
   return cell;
+}
+
+bool validate_mouse_input(float x, float y, GameIO_Status status,
+                          SDL_Renderer *ren, SDL_FRect squareOutline) {
+  float scale_x;
+  float scale_y;
+
+  SDL_GetRenderScale(ren, &scale_x, &scale_y);
+
+  if (status == EDITING) {
+    if ((x / scale_x > squareOutline.w - squareOutline.x * -1) ||
+        (x / scale_x < squareOutline.x))
+      // std::cout << "Outside x" << std::endl;
+      return false;
+    else if ((y / scale_y > squareOutline.h - squareOutline.y * -1) ||
+             (y / scale_y < squareOutline.y))
+      return false;
+    // std::cout << "Outside y" << std::endl;
+    return true;
+  }
+  return false;
 }
 
 void Game_IO::handle_button_events(SDL_Event *event,
@@ -45,7 +67,10 @@ void Game_IO::handle_button_events(SDL_Event *event,
       } else {
         std::cout << "mouse button down at position: " << event->button.x << ","
                   << event->button.y << std::endl;
-        if (status == EDITING) {
+        bool valid_input = validate_mouse_input(
+            event->button.x, event->button.y, status, ren, this->squareOutline,
+            this->starting_pos_diff_x, this->starting_pos_diff_y);
+        if (valid_input) {
           float scale_x;
           float scale_y;
           SDL_GetRenderScale(ren, &scale_x, &scale_y);
@@ -90,6 +115,8 @@ void Game_IO::handle_mousegrab(SDL_MouseMotionEvent coord) {
     SDL_FRect *rect = cells[i]->get_cell_graphic();
     rect->x += 10 * coord.xrel;
     rect->y += 10 * coord.yrel;
+    starting_pos_diff_x += coord.xrel;
+    starting_pos_diff_y += coord.yrel;
   }
   squareOutline.x += 10 * coord.xrel;
   squareOutline.y += 10 * coord.yrel;

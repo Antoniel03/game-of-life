@@ -15,8 +15,6 @@ cell_status Cell::get_status() { return status; }
 SDL_FRect *Cell::get_cell_graphic() { return cell_graphic; }
 
 void Cell::update_position(float x, float y) {
-  this->x = x;
-  this->y = y;
   cell_graphic->x = x;
   cell_graphic->y = y;
 }
