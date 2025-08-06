@@ -35,4 +35,8 @@ public:
 
 private:
   void render_cells(); // Requires cells
+  void print_current_cells();
+  bool is_coord_occupied(float x, float y);
+  bool validate_mouse_input(float x, float y, GameIO_Status status,
+                            SDL_Renderer *ren, SDL_FRect squareOutline);
 };

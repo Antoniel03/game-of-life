@@ -72,3 +72,10 @@ void Game_IO::zoom_out() {
 }
 
 void Game_IO::set_cells(std::vector<Cell *> _cells) { cells = _cells; }
+
+void Game_IO::print_current_cells() {
+  for (int i = 0; i < this->cells.size(); i++) {
+    SDL_FRect *graphic = cells[i]->get_cell_graphic();
+    std::cout << "cell: " << graphic->x << "," << graphic->y << std::endl;
+  }
+}

@@ -3,26 +3,41 @@
 #include <SDL3/SDL_rect.h>
 #include <iostream>
 
-Cell *createCell(float x, float y, SDL_Renderer *renderer) {
-  std::cout << "original: " << x << "," << y << std::endl;
-  int iX = std::round(x);
-  int iY = std::round(y);
+void normalize_coord(float *x, float *y) {
+  int iX = std::round(*x);
+  int iY = std::round(*y);
   std::string strX = std::to_string(iX);
   std::string strY = std::to_string(iY);
   int lenX = strX.length();
   int lenY = strY.length();
   strX[lenX - 1] = '0';
   strY[lenY - 1] = '0';
-  x = std::stof(strX);
-  y = std::stof(strY);
+  *x = std::stof(strX);
+  *y = std::stof(strY);
+}
+
+bool Game_IO::is_coord_occupied(float x, float y) {
+  for (int i = 0; i < cells.size(); i++) {
+    normalize_coord(&x, &y);
+    SDL_FRect *graphic = cells[i]->get_cell_graphic();
+
+    if ((graphic->x == x) && (graphic->y == y))
+      return true;
+  }
+  return false;
+}
+
+Cell *createCell(float x, float y, SDL_Renderer *renderer) {
+  std::cout << "original: " << x << "," << y << std::endl;
+  normalize_coord(&x, &y);
   std::cout << "created at: " << x << "," << y << std::endl;
 
   Cell *cell = new Cell{x, y};
   return cell;
 }
 
-bool validate_mouse_input(float x, float y, GameIO_Status status,
-                          SDL_Renderer *ren, SDL_FRect squareOutline) {
+bool Game_IO::validate_mouse_input(float x, float y, GameIO_Status status,
+                                   SDL_Renderer *ren, SDL_FRect squareOutline) {
   float scale_x;
   float scale_y;
 
@@ -37,6 +52,10 @@ bool validate_mouse_input(float x, float y, GameIO_Status status,
              (y / scale_y < squareOutline.y))
       return false;
     // std::cout << "Outside y" << std::endl;
+    else if (is_coord_occupied(x, y)) {
+      std::cout << "coord already occupied" << std::endl;
+      return false;
+    }
     return true;
   }
   return false;
@@ -88,7 +107,8 @@ void Game_IO::handle_button_events(SDL_Event *event,
         status = EDITING;
       if (event->key.key == SDLK_R)
         status = RUNNING;
-
+      if (event->key.key == SDLK_C)
+        print_current_cells();
       break;
 
     case SDL_EVENT_MOUSE_BUTTON_UP:
