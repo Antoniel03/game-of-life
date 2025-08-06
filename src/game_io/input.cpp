@@ -68,8 +68,7 @@ void Game_IO::handle_button_events(SDL_Event *event,
         std::cout << "mouse button down at position: " << event->button.x << ","
                   << event->button.y << std::endl;
         bool valid_input = validate_mouse_input(
-            event->button.x, event->button.y, status, ren, this->squareOutline,
-            this->starting_pos_diff_x, this->starting_pos_diff_y);
+            event->button.x, event->button.y, status, ren, this->squareOutline);
         if (valid_input) {
           float scale_x;
           float scale_y;
@@ -115,8 +114,6 @@ void Game_IO::handle_mousegrab(SDL_MouseMotionEvent coord) {
     SDL_FRect *rect = cells[i]->get_cell_graphic();
     rect->x += 10 * coord.xrel;
     rect->y += 10 * coord.yrel;
-    starting_pos_diff_x += coord.xrel;
-    starting_pos_diff_y += coord.yrel;
   }
   squareOutline.x += 10 * coord.xrel;
   squareOutline.y += 10 * coord.yrel;
