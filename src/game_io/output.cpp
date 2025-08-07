@@ -1,5 +1,5 @@
+#include "../models/cell.hpp"
 #include "game_io.hpp"
-// #include "../models/cell.hpp"
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
@@ -31,7 +31,8 @@ void Game_IO::init() {
 void Game_IO::loop(bool quit) {
   SDL_Event event;
   bool mouse_wheel_pressed = false;
-  squareOutline = SDL_FRect{0, 0, 1270, 690};
+  squareOutline = SDL_FRect{0, 0, 600, 600};
+  init_cells();
   while (status != ENDED) {
     handle_button_events(&event, &mouse_wheel_pressed);
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
@@ -45,16 +46,16 @@ void Game_IO::loop(bool quit) {
 }
 
 void Game_IO::render_cells() {
-  int size = cells.size();
-  for (int i = 0; i < size; i++) {
-    if (cells[i]->get_status() == ALIVE)
-      SDL_SetRenderDrawColor(ren, 100, 200, 150, 255);
-    else
-      SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-
-    SDL_RenderFillRect(ren, cells[i]->get_cell_graphic());
+  for (int i = 0; i < this->squareOutline.h; i++) {
+    for (int j = 0; j < this->squareOutline.w; j++) {
+      if (cells[i][j].get_status() == ALIVE)
+        SDL_SetRenderDrawColor(ren, 100, 200, 150, 255);
+      else
+        SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+      SDL_RenderFillRect(ren, cells[i][j].get_cell_graphic());
+    }
   }
-};
+}
 
 void Game_IO::zoom_in() {
   float scale_x;
@@ -71,11 +72,33 @@ void Game_IO::zoom_out() {
   SDL_SetRenderScale(ren, scale_x - 0.1, scale_y - 0.1);
 }
 
-void Game_IO::set_cells(std::vector<Cell *> _cells) { cells = _cells; }
+void Game_IO::set_cells(Cell **_cells) { cells = _cells; }
 
 void Game_IO::print_current_cells() {
-  for (int i = 0; i < this->cells.size(); i++) {
-    SDL_FRect *graphic = cells[i]->get_cell_graphic();
-    std::cout << "cell: " << graphic->x << "," << graphic->y << std::endl;
+  for (int i = 0; i < this->squareOutline.h; i++) {
+    for (int j = 0; j < this->squareOutline.w; j++) {
+      SDL_FRect *graphic = cells[i][j].get_cell_graphic();
+      std::cout << "cell: " << graphic->x << "," << graphic->y << std::endl;
+    }
+  }
+}
+
+void Game_IO::init_cells() {
+  int rows = static_cast<int>(squareOutline.h);
+  int columns = static_cast<int>(squareOutline.w);
+  cells = new Cell *[rows];
+  std::cout << "initialized cell rows: " << rows << std::endl;
+
+  for (int i = 0; i < rows; i++) {
+    cells[i] = new Cell[columns];
+    std::cout << "created new column at " << i << std::endl;
+    for (int j = 0; j < columns; j++) {
+      float x = static_cast<float>(i);
+      float y = static_cast<float>(j);
+      cells[i][j] = Cell{x, y, DEAD};
+      SDL_FRect *graphic = cells[i][j].get_cell_graphic();
+      std::cout << "create cell at: " << graphic->x << "," << graphic->y
+                << std::endl;
+    }
   }
 }

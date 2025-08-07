@@ -10,6 +10,7 @@ private:
 public:
   Cell();
   Cell(float x, float y);
+  Cell(float x, float y, cell_status _cell_status);
   void update_status(cell_status _status);
   cell_status get_status();
   SDL_FRect *get_cell_graphic();

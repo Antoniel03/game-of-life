@@ -16,23 +16,23 @@ void normalize_coord(float *x, float *y) {
   *y = std::stof(strY);
 }
 
-bool Game_IO::is_coord_occupied(float x, float y) {
-  for (int i = 0; i < cells.size(); i++) {
-    normalize_coord(&x, &y);
-    SDL_FRect *graphic = cells[i]->get_cell_graphic();
+// bool Game_IO::is_coord_occupied(float x, float y) {
+//   for (int i = 0; i < cells.size(); i++) {
+//     normalize_coord(&x, &y);
+//     SDL_FRect *graphic = cells[i].get_cell_graphic();
+//
+//     if ((graphic->x == x) && (graphic->y == y))
+//       return true;
+//   }
+//   return false;
+// }
 
-    if ((graphic->x == x) && (graphic->y == y))
-      return true;
-  }
-  return false;
-}
-
-Cell *createCell(float x, float y, SDL_Renderer *renderer) {
+Cell createCell(float x, float y, SDL_Renderer *renderer, cell_status status) {
   std::cout << "original: " << x << "," << y << std::endl;
   normalize_coord(&x, &y);
   std::cout << "created at: " << x << "," << y << std::endl;
 
-  Cell *cell = new Cell{x, y};
+  Cell cell = Cell{x, y, status};
   return cell;
 }
 
@@ -52,10 +52,6 @@ bool Game_IO::validate_mouse_input(float x, float y, GameIO_Status status,
              (y / scale_y < squareOutline.y))
       return false;
     // std::cout << "Outside y" << std::endl;
-    else if (is_coord_occupied(x, y)) {
-      std::cout << "coord already occupied" << std::endl;
-      return false;
-    }
     return true;
   }
   return false;
@@ -70,16 +66,16 @@ void Game_IO::handle_button_events(SDL_Event *event,
       status = ENDED;
       break;
 
-    case SDL_EVENT_MOUSE_MOTION:
-      if (*mouse_wheel_pressed) {
-        std::cout << "grabbing, current position: " << event->button.x << ","
-                  << event->button.y << std::endl;
-        std::cout << "motion: " << event->motion.xrel << ","
-                  << event->motion.yrel << std::endl;
-
-        handle_mousegrab(event->motion);
-      }
-      break;
+    // case SDL_EVENT_MOUSE_MOTION:
+    //   if (*mouse_wheel_pressed) {
+    //     std::cout << "grabbing, current position: " << event->button.x << ","
+    //               << event->button.y << std::endl;
+    //     std::cout << "motion: " << event->motion.xrel << ","
+    //               << event->motion.yrel << std::endl;
+    //
+    //     handle_mousegrab(event->motion);
+    //   }
+    //   break;
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
       if (+event->button.button == 2) {
         *mouse_wheel_pressed = true;
@@ -92,9 +88,12 @@ void Game_IO::handle_button_events(SDL_Event *event,
           float scale_x;
           float scale_y;
           SDL_GetRenderScale(ren, &scale_x, &scale_y);
-          Cell *c = createCell(event->button.x / scale_x,
-                               event->button.y / scale_y, ren);
-          cells.push_back(c);
+          Cell c = createCell(event->button.x / scale_x,
+                              event->button.y / scale_y, ren, ALIVE);
+          SDL_FRect *cell_graphic = c.get_cell_graphic();
+          int int_x = static_cast<int>(cell_graphic->x);
+          int int_y = static_cast<int>(cell_graphic->y);
+          cells[int_x][int_y] = c;
         }
       }
       break;
@@ -116,25 +115,25 @@ void Game_IO::handle_button_events(SDL_Event *event,
       std::cout << "Mouse button lifted" << std::endl;
       break;
 
-    case SDL_EVENT_MOUSE_WHEEL:
-      if (event->wheel.y == 1) {
-        zoom_in();
-      } else {
-        zoom_out();
-      }
-      std::cout << "mouse scroll data: " << event->wheel.y << std::endl;
-      break;
+      // case SDL_EVENT_MOUSE_WHEEL:
+      //   if (event->wheel.y == 1) {
+      //     zoom_in();
+      //   } else {
+      //     zoom_out();
+      //   }
+      //   std::cout << "mouse scroll data: " << event->wheel.y << std::endl;
+      //   break;
     }
   }
 }
-void Game_IO::handle_mousegrab(SDL_MouseMotionEvent coord) {
-
-  int size = cells.size();
-  for (int i = 0; i < size; i++) {
-    SDL_FRect *rect = cells[i]->get_cell_graphic();
-    rect->x += 10 * coord.xrel;
-    rect->y += 10 * coord.yrel;
-  }
-  squareOutline.x += 10 * coord.xrel;
-  squareOutline.y += 10 * coord.yrel;
-}
+// void Game_IO::handle_mousegrab(SDL_MouseMotionEvent coord) {
+//
+//   int size = cells.size();
+//   for (int i = 0; i < size; i++) {
+//     SDL_FRect *rect = cells[i].get_cell_graphic();
+//     rect->x += 10 * coord.xrel;
+//     rect->y += 10 * coord.yrel;
+//   }
+//   squareOutline.x += 10 * coord.xrel;
+//   squareOutline.y += 10 * coord.yrel;
+// }
