@@ -12,11 +12,15 @@ private:
 public:
   Game_Ruler();
   Game_Ruler(int _width, int _height);
-  bool validate_coord(float x, float y);
-  bool add(float x, float y, cell_status status);
+  Cell **getMatrix();
+  void set_matrix(Cell **_cells);
+
+private:
   void kill(int x, int y);
-  void delete_cell(float x, float y);
   int count_alive();
   int count();
-  Cell **getMatrix();
+  void process_next_generation();
+  bool is_neighbor_alive(int x, int y);
+  int count_neighbors(int x, int y);
+  bool valid_coord(int x, int y);
 };
