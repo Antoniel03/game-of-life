@@ -24,3 +24,9 @@ void Cell::update_position(float x, float y) {
   cell_graphic->x = x;
   cell_graphic->y = y;
 }
+
+string Cell::get_status_name() {
+  if (status == 0)
+    return "ALIVE";
+  return "DEAD";
+}

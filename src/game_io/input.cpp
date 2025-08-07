@@ -77,7 +77,7 @@ void Game_IO::handle_button_events(SDL_Event *event,
     //   }
     //   break;
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
-      if (+event->button.button == 2) {
+      if (event->button.button == 2) {
         *mouse_wheel_pressed = true;
       } else {
         std::cout << "mouse button down at position: " << event->button.x << ","
@@ -85,15 +85,12 @@ void Game_IO::handle_button_events(SDL_Event *event,
         bool valid_input = validate_mouse_input(
             event->button.x, event->button.y, status, ren, this->squareOutline);
         if (valid_input) {
-          float scale_x;
-          float scale_y;
-          SDL_GetRenderScale(ren, &scale_x, &scale_y);
-          Cell c = createCell(event->button.x / scale_x,
-                              event->button.y / scale_y, ren, ALIVE);
-          SDL_FRect *cell_graphic = c.get_cell_graphic();
-          int int_x = static_cast<int>(cell_graphic->x);
-          int int_y = static_cast<int>(cell_graphic->y);
-          cells[int_x][int_y] = c;
+          float x = event->button.x;
+          float y = event->button.y;
+          normalize_coord(&x, &y);
+          int int_x = static_cast<int>(x);
+          int int_y = static_cast<int>(y);
+          cells[int_x][int_y].update_status(ALIVE);
         }
       }
       break;

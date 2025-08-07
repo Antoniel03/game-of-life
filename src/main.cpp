@@ -11,5 +11,7 @@ int main(int argc, char *argv[]) {
   Game_IO g = Game_IO();
   // g.set_cells(cells);
   g.init();
+  g.set_canvas_size(100, 100);
+  g.init_cells();
   g.loop(false);
 }

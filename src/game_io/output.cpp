@@ -31,8 +31,6 @@ void Game_IO::init() {
 void Game_IO::loop(bool quit) {
   SDL_Event event;
   bool mouse_wheel_pressed = false;
-  squareOutline = SDL_FRect{0, 0, 600, 600};
-  init_cells();
   while (status != ENDED) {
     handle_button_events(&event, &mouse_wheel_pressed);
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
@@ -46,8 +44,8 @@ void Game_IO::loop(bool quit) {
 }
 
 void Game_IO::render_cells() {
-  for (int i = 0; i < this->squareOutline.h; i++) {
-    for (int j = 0; j < this->squareOutline.w; j++) {
+  for (int i = 0; i < this->squareOutline.h; i += 10) {
+    for (int j = 0; j < this->squareOutline.w; j += 10) {
       if (cells[i][j].get_status() == ALIVE)
         SDL_SetRenderDrawColor(ren, 100, 200, 150, 255);
       else
@@ -75,10 +73,11 @@ void Game_IO::zoom_out() {
 void Game_IO::set_cells(Cell **_cells) { cells = _cells; }
 
 void Game_IO::print_current_cells() {
-  for (int i = 0; i < this->squareOutline.h; i++) {
-    for (int j = 0; j < this->squareOutline.w; j++) {
+  for (int i = 0; i < this->squareOutline.h; i += 10) {
+    for (int j = 0; j < this->squareOutline.w; j += 10) {
       SDL_FRect *graphic = cells[i][j].get_cell_graphic();
-      std::cout << "cell: " << graphic->x << "," << graphic->y << std::endl;
+      std::cout << "cell: " << graphic->x << "," << graphic->y
+                << ": " + cells[i][j].get_status_name() << std::endl;
     }
   }
 }
@@ -89,16 +88,19 @@ void Game_IO::init_cells() {
   cells = new Cell *[rows];
   std::cout << "initialized cell rows: " << rows << std::endl;
 
-  for (int i = 0; i < rows; i++) {
+  for (int i = 0; i < rows; i += 10) {
     cells[i] = new Cell[columns];
     std::cout << "created new column at " << i << std::endl;
-    for (int j = 0; j < columns; j++) {
+    for (int j = 0; j < columns; j += 10) {
       float x = static_cast<float>(i);
       float y = static_cast<float>(j);
       cells[i][j] = Cell{x, y, DEAD};
       SDL_FRect *graphic = cells[i][j].get_cell_graphic();
-      std::cout << "create cell at: " << graphic->x << "," << graphic->y
-                << std::endl;
     }
   }
+  std::cout << "out" << std::endl;
+}
+
+void Game_IO::set_canvas_size(float h, float w) {
+  squareOutline = SDL_FRect{0, 0, h, w};
 }

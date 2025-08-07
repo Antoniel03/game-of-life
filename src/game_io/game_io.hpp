@@ -33,6 +33,7 @@ public:
   void loop(bool quit); // Requires cells
   void change_refresh_rate(int refresh_rate);
   void set_cells(Cell **_cells);
+  void set_canvas_size(float h, float w);
 
 private:
   void render_cells(); // Requires cells

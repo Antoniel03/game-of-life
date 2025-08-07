@@ -1,6 +1,8 @@
 #include <SDL3/SDL_rect.h>
+#include <string>
 #pragma once
 enum cell_status { ALIVE, DEAD };
+using std::string;
 
 class Cell {
 private:
@@ -15,4 +17,5 @@ public:
   cell_status get_status();
   SDL_FRect *get_cell_graphic();
   void update_position(float x, float y);
+  string get_status_name();
 };
