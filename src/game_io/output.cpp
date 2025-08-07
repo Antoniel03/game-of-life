@@ -44,8 +44,8 @@ void Game_IO::loop(bool quit) {
 }
 
 void Game_IO::render_cells() {
-  for (int i = 0; i < this->squareOutline.h; i += 10) {
-    for (int j = 0; j < this->squareOutline.w; j += 10) {
+  for (int i = 0; i < this->squareOutline.w; i += 10) {
+    for (int j = 0; j < this->squareOutline.h; j += 10) {
       if (cells[i][j].get_status() == ALIVE)
         SDL_SetRenderDrawColor(ren, 100, 200, 150, 255);
       else
@@ -83,8 +83,8 @@ void Game_IO::print_current_cells() {
 }
 
 void Game_IO::init_cells() {
-  int rows = static_cast<int>(squareOutline.h);
-  int columns = static_cast<int>(squareOutline.w);
+  int rows = static_cast<int>(squareOutline.w);
+  int columns = static_cast<int>(squareOutline.h);
   cells = new Cell *[rows];
   std::cout << "initialized cell rows: " << rows << std::endl;
 
@@ -102,5 +102,5 @@ void Game_IO::init_cells() {
 }
 
 void Game_IO::set_canvas_size(float h, float w) {
-  squareOutline = SDL_FRect{0, 0, h, w};
+  squareOutline = SDL_FRect{0, 0, w, h};
 }
