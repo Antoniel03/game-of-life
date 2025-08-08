@@ -91,6 +91,7 @@ void Game_IO::handle_button_events(SDL_Event *event,
           int int_x = static_cast<int>(x);
           int int_y = static_cast<int>(y);
           cells[int_x][int_y].update_status(ALIVE);
+          std::cout << "cell created at " << int_x << "," << int_y << std::endl;
         }
       }
       break;

@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
   src/game_io/input.cpp
   src/game_io/output.cpp
   src/models/cell.cpp
+  src/models/game_ruler.cpp
 )
 
 target_link_directories(${PROJECT_NAME} PUBLIC src/game_io src/models)

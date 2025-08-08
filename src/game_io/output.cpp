@@ -13,7 +13,7 @@ Game_IO::Game_IO() {
 }
 void Game_IO::init() {
   SDL_Init(SDL_INIT_VIDEO);
-  status = RUNNING;
+  status = PAUSED;
   if (win == nullptr) {
     status = ENDED;
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
@@ -73,8 +73,8 @@ void Game_IO::zoom_out() {
 void Game_IO::set_cells(Cell **_cells) { cells = _cells; }
 
 void Game_IO::print_current_cells() {
-  for (int i = 0; i < this->squareOutline.h; i += 10) {
-    for (int j = 0; j < this->squareOutline.w; j += 10) {
+  for (int i = 0; i < this->squareOutline.w; i += 10) {
+    for (int j = 0; j < this->squareOutline.h; j += 10) {
       SDL_FRect *graphic = cells[i][j].get_cell_graphic();
       std::cout << "cell: " << graphic->x << "," << graphic->y
                 << ": " + cells[i][j].get_status_name() << std::endl;
@@ -104,3 +104,8 @@ void Game_IO::init_cells() {
 void Game_IO::set_canvas_size(float h, float w) {
   squareOutline = SDL_FRect{0, 0, w, h};
 }
+
+SDL_Renderer *Game_IO::get_renderer() { return ren; }
+SDL_FRect *Game_IO::get_squareoutline() { return &squareOutline; }
+GameIO_Status Game_IO::get_state() { return status; }
+Cell **Game_IO::get_cells() { return cells; }
