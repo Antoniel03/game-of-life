@@ -16,7 +16,7 @@ private:
   SDL_Renderer *ren;
   int refresh_rate = 60;
   GameIO_Status status = ENDED;
-  std::vector<Cell *> cells;
+  Cell **cells;
   SDL_FRect squareOutline;
 
 public:
@@ -27,12 +27,22 @@ public:
 
   // output
   void init();
+  void init_cells();
   void zoom_in();
   void zoom_out();
   void loop(bool quit); // Requires cells
   void change_refresh_rate(int refresh_rate);
-  void set_cells(std::vector<Cell *> _cells);
+  void set_cells(Cell **_cells);
+  Cell **get_cells();
+  void set_canvas_size(float h, float w);
+  void render_cells(); // Requires cells
+  SDL_Renderer *get_renderer();
+  SDL_FRect *get_squareoutline();
+  GameIO_Status get_state();
 
 private:
-  void render_cells(); // Requires cells
+  void print_current_cells();
+  bool is_coord_occupied(float x, float y);
+  bool validate_mouse_input(float x, float y, GameIO_Status status,
+                            SDL_Renderer *ren, SDL_FRect squareOutline);
 };
