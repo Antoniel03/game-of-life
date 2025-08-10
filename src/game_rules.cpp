@@ -7,8 +7,8 @@ Game_Rules::Game_Rules() {
   width = 1270;
   cells = new Cell *[height];
 
-  for (int i = 0; i < width; i++) {
-    for (int j = 0; j < height; j++) {
+  for (int i = 0; i < width; i += 10) {
+    for (int j = 0; j < height; j += 10) {
       cells[i] = new Cell[height];
     }
   }
@@ -75,7 +75,7 @@ void Game_Rules::process_next_generation() {
       }
     }
   }
-  // TODO: free cells
+  free_cells();
   cells = next_gen;
   std::cout << "generation: " << generation << std::endl;
   generation++;
@@ -106,4 +106,12 @@ bool Game_Rules::valid_coord(int x, int y) {
   if ((x < height) && (y < width))
     return true;
   return false;
+}
+
+void Game_Rules::free_cells() {
+  for (int i = 0; i < width; i += 10) {
+    delete cells[i];
+  }
+  delete[] cells;
+  cells = nullptr;
 }

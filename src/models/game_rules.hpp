@@ -23,4 +23,5 @@ private:
   int count_neighbors(int x, int y);
   bool valid_coord(int x, int y);
   Cell **init_cells();
+  void free_cells();
 };
