@@ -1,8 +1,8 @@
-#include "game_ruler.hpp"
-#include "cell.hpp"
+#include "models/game_rules.hpp"
+#include "models/cell.hpp"
 #include <iostream>
 
-Game_Ruler::Game_Ruler() {
+Game_Rules::Game_Rules() {
   height = 690;
   width = 1270;
   cells = new Cell *[height];
@@ -14,12 +14,12 @@ Game_Ruler::Game_Ruler() {
   }
 }
 
-Cell **init_cells(int h, int w) {
-  Cell **_cells = new Cell *[w];
+Cell **Game_Rules::init_cells() {
+  Cell **_cells = new Cell *[height];
 
-  for (int i = 0; i < w; i += 10) {
-    _cells[i] = new Cell[h];
-    for (int j = 0; j < h; j += 10) {
+  for (int i = 0; i < height; i += 10) {
+    _cells[i] = new Cell[width];
+    for (int j = 0; j < width; j += 10) {
       float x = static_cast<float>(i);
       float y = static_cast<float>(j);
       _cells[i][j] = Cell{x, y, DEAD};
@@ -29,22 +29,21 @@ Cell **init_cells(int h, int w) {
   return _cells;
 }
 
-Game_Ruler::Game_Ruler(int _width, int _height) {
+Game_Rules::Game_Rules(int _width, int _height) {
   height = _height;
   width = _width;
+  cells = init_cells();
 }
-void Game_Ruler::kill(int x, int y) {
+void Game_Rules::kill(int x, int y) {
   cells[x][y].update_status(DEAD);
   current_cells_alive--;
 }
-int Game_Ruler::count_alive() { return current_cells_alive; }
-int Game_Ruler::count() { return current_cells; }
-Cell **Game_Ruler::getMatrix() { return cells; }
+Cell **Game_Rules::getMatrix() { return cells; }
 
-void Game_Ruler::set_matrix(Cell **_cells) { cells = _cells; }
+void Game_Rules::set_matrix(Cell **_cells) { cells = _cells; }
 
-void Game_Ruler::process_next_generation() {
-  Cell **next_gen = init_cells(width, height);
+void Game_Rules::process_next_generation() {
+  Cell **next_gen = init_cells();
 
   for (int i = 0; i < width; i += 10) {
     for (int j = 0; j < height; j += 10) {
@@ -68,6 +67,7 @@ void Game_Ruler::process_next_generation() {
             next_gen[i][j].update_status(DEAD);
           }
 
+          // Survival
           else if ((neighbors == 3) || (neighbors == 2)) {
             next_gen[i][j].update_status(ALIVE);
           }
@@ -75,12 +75,13 @@ void Game_Ruler::process_next_generation() {
       }
     }
   }
+  // TODO: free cells
   cells = next_gen;
   std::cout << "generation: " << generation << std::endl;
   generation++;
 }
 
-bool Game_Ruler::is_neighbor_alive(int x, int y) {
+bool Game_Rules::is_neighbor_alive(int x, int y) {
   if (!valid_coord(x, y))
     return false;
   if (cells[x][y].get_status() == ALIVE)
@@ -88,7 +89,7 @@ bool Game_Ruler::is_neighbor_alive(int x, int y) {
   return false;
 }
 
-int Game_Ruler::count_neighbors(int x, int y) {
+int Game_Rules::count_neighbors(int x, int y) {
   int neighbors_alive = 0;
   for (int i = x - 10; i < x + 20; i += 10) {
     for (int j = y - 10; j < y + 20; j += 10) {
@@ -98,14 +99,10 @@ int Game_Ruler::count_neighbors(int x, int y) {
       }
     }
   }
-  // if (neighbors_alive != 0) {
-  //   std::cout << "cell " << x << "," << y << " has " << neighbors_alive
-  //             << " neighbors alive" << std::endl;
-  // }
   return neighbors_alive;
 }
 
-bool Game_Ruler::valid_coord(int x, int y) {
+bool Game_Rules::valid_coord(int x, int y) {
   if ((x < height) && (y < width))
     return true;
   return false;

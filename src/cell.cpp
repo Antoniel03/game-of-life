@@ -1,4 +1,4 @@
-#include "cell.hpp"
+#include "models/cell.hpp"
 #include <SDL3/SDL_rect.h>
 #include <iostream>
 
