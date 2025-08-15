@@ -1,7 +1,8 @@
 
 # game-of-life
 My implementation of John Conway's Game of Life
-
+# Dependencies
+- SDL3
 # Installation
 Go to the project's root folder and run
 ```sh
@@ -13,8 +14,6 @@ cd build
 #or
 ./Debug/main
 ```
-
-
 # Usage
 Keybinds:
 - **E** (Edit): Allows you to edit the cells.
