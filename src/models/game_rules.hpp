@@ -16,6 +16,7 @@ public:
   Cell **getMatrix();
   void set_matrix(Cell **_cells);
   void process_next_generation();
+  void free_cells();
 
 private:
   void kill(int x, int y);
@@ -23,5 +24,4 @@ private:
   int count_neighbors(int x, int y);
   bool valid_coord(int x, int y);
   Cell **init_cells();
-  void free_cells();
 };

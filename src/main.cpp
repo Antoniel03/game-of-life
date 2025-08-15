@@ -1,5 +1,6 @@
 #include "models/game_io.hpp"
 #include "models/game_rules.hpp"
+#include <iostream>
 
 int main(int argc, char *argv[]) {
 
@@ -25,4 +26,5 @@ int main(int argc, char *argv[]) {
     if (g.get_state() == RUNNING)
       gr.process_next_generation();
   }
+  gr.free_cells();
 }
