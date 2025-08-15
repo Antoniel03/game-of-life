@@ -9,9 +9,9 @@ cmake -S . -B build
 cmake --build build
 #Inside the build folder you'll find the executable for the project
 cd build
-./main.exe
+./main
 #or
-./Debug/main.exe
+./Debug/main
 ```
 
 
